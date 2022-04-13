@@ -1,112 +1,116 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameScene
 {
     public class TetrominoController : MonoBehaviour
     {
-        public GameObject tetromino;
-        public string left;
-        public string right;
-        public string down;
-        public string drop;
-        public string hold;
-        public string rotateL;
-        public string rotateR;
-        public string playerName;
-        private bool allowedToHold;
+        [SerializeField]
+        private string leftInput;
+        [SerializeField]
+        private string rightInput;
+        [SerializeField]
+        private string downInput;
+        [SerializeField]
+        private string dropInput;
+        [SerializeField]
+        private string holdInput;
+        [SerializeField]
+        private string rotateLeftInput;
+        [SerializeField]
+        private string rotateRightInput;
+        [SerializeField]
+        private TetrisQueue tetrominoQueue;
+        [SerializeField]
+        public TetrisGrid grid;
 
+        public string playerName;      
+        private bool allowedToPutOnHold;
+        public GameObject tetromino;
         private Transform tetrominoTransform;
         private Tetromino tetrominoStats;
-        private Transform gridTransform;
-        public TetrisGrid grid;
-        public TetrisQueue queue;
-        private int movedL;
-        private int movedR;
-        private float moveLTime;
-        private float moveRTime;
-        private float moveDTime;
+        private int movedLefState;
+        private int movedRighState;
+        private float moveLeftTimepoint;
+        private float moveRightTimepoint;
+        private float moveDownTimepoint;
 
         private void Start()
         {
-            allowedToHold = true;
-            movedL = 0;
-            movedR = 0;
+            allowedToPutOnHold = true;
+            movedLefState = 0;
+            movedRighState = 0;
         }
 
-        internal void Set(GameObject created)
+        public void SetControllerTetromino(GameObject created)
         {
             tetromino = created;
             tetrominoTransform = tetromino.transform;
             tetrominoStats = tetromino.GetComponent<Tetromino>();
-            gridTransform = grid.transform;
         }
 
         public void DropOnTick()
         {
-            int pass = 1;
+            bool pass = true;
 
             if (tetrominoTransform.localPosition.y <= tetrominoStats.down)
             {
                 tetrominoStats.LockTetromino();
                 GameManager.Instance.SumPiece(this.playerName);
                 SpawnNew();
-                pass = 0;
+                allowedToPutOnHold = true;
+                pass = false;
             }
-            else if (pass == 1)
+            else if (pass)
             {
-                foreach (Transform child in tetrominoStats.transform)
+                foreach (Transform childTile in tetrominoTransform)
                 {
-                    int x = (int)Mathf.Floor(child.position.x - transform.position.x);
-                    int y = (int)Mathf.Floor(child.position.y - transform.position.y);
+                    int x = (int)Mathf.Floor(childTile.position.x - transform.position.x);
+                    int y = (int)Mathf.Floor(childTile.position.y - transform.position.y);
 
-                    if (grid.CheckIfEmpty(y - 1, x) == false)
+                    if (grid.CheckIfFieldEmpty(y - 1, x) == false)
                     {
                         tetrominoStats.LockTetromino();
                         GameManager.Instance.SumPiece(this.playerName);
-                        allowedToHold = true;
+                        allowedToPutOnHold = true;
                         SpawnNew();
-                        pass = 0;
+                        pass = false;
                         break;
                     }
                 }
             }
-            if (pass == 1)
+            if (pass)
             {
-                Vector2 position = tetrominoTransform.position;
-                position.y = tetrominoTransform.position.y - 1;
-                tetrominoTransform.position = position;
+                tetrominoTransform.Translate(new Vector3(0, -1, 0), Space.World);
             }
         }
 
         void Update()
         {
-            if (Input.GetKey(left))
+            if (Input.GetKey(leftInput))
             {
                 if (tetrominoTransform.localPosition.x > tetrominoStats.left)
                 {
-                    if ((movedL == 0 && Input.GetKeyDown(left)) || (movedL == 1 && Time.time - moveLTime >= 0.23f) || (movedL == 2 && Time.time - moveLTime >= 0.013f)) 
+                    if ((movedLefState == 0 && Input.GetKeyDown(leftInput)) || (movedLefState == 1 && Time.time - moveLeftTimepoint >= 0.23f)
+                        || (movedLefState == 2 && Time.time - moveLeftTimepoint >= 0.013f))
                     {
-                        if (movedL == 0)
+                        if (movedLefState == 0)
                         {
-                            movedL = 1;
+                            movedLefState = 1;
                         }
                         else
                         {
-                            movedL = 2;
+                            movedLefState = 2;
                         }
 
-                        moveLTime = Time.time;
+                        moveLeftTimepoint = Time.time;
 
                         bool pass = true;
-                        foreach (Transform child in tetrominoStats.transform)
+                        foreach (Transform childTile in tetrominoTransform)
                         {
-                            int x = (int)Mathf.Floor(child.position.x - transform.position.x);
-                            int y = (int)Mathf.Floor(child.position.y - transform.position.y);
+                            int x = (int)Mathf.Floor(childTile.position.x - transform.position.x);
+                            int y = (int)Mathf.Floor(childTile.position.y - transform.position.y);
 
-                            if (grid.CheckIfEmpty(y, x - 1) == false)
+                            if (grid.CheckIfFieldEmpty(y, x - 1) == false)
                             {
                                 pass = false;
                             }
@@ -114,52 +118,51 @@ namespace GameScene
 
                         if (pass)
                         {
-                            Vector2 position = tetrominoTransform.position;
-                            position.x = tetrominoTransform.position.x - 1;
-                            tetrominoTransform.position = position;
+                            tetrominoTransform.Translate(new Vector3(-1, 0, 0), Space.World);
                             tetrominoStats.UpdateGhost();
                         }
 
                         else
                         {
-                            movedL = 0;
+                            movedLefState = 0;
                         }
                     }
                 }
                 else
                 {
-                    movedL = 0;
+                    movedLefState = 0;
                 }
             }
             else
             {
-                movedL = 0;
+                movedLefState = 0;
             }
 
-            if (Input.GetKey(right))
-            {                
+            if (Input.GetKey(rightInput))
+            {
                 if (tetrominoTransform.localPosition.x < grid.width - tetrominoStats.right)
                 {
-                    if ((movedR == 0 && Input.GetKeyDown(right)) || (movedR == 1 && Time.time - moveRTime >= 0.23f) || (movedR == 2 && Time.time - moveRTime >= 0.013f)) 
+                    if ((movedRighState == 0 && Input.GetKeyDown(rightInput)) || (movedRighState == 1 && Time.time - moveRightTimepoint >= 0.23f)
+                        || (movedRighState == 2 && Time.time - moveRightTimepoint >= 0.013f))
                     {
-                        if (movedR == 0)
+                        if (movedRighState == 0)
                         {
-                            movedR = 1;
+                            movedRighState = 1;
                         }
                         else
                         {
-                            movedR = 2;
+                            movedRighState = 2;
                         }
 
-                        moveRTime = Time.time;
+                        moveRightTimepoint = Time.time;
 
                         bool pass = true;
-                        foreach (Transform child in tetrominoStats.transform)
+                        foreach (Transform childTile in tetrominoTransform)
                         {
-                            int x = (int)Mathf.Floor(child.position.x - transform.position.x);
-                            int y = (int)Mathf.Floor(child.position.y - transform.position.y);
+                            int x = (int)Mathf.Floor(childTile.position.x - transform.position.x);
+                            int y = (int)Mathf.Floor(childTile.position.y - transform.position.y);
 
-                            if (grid.CheckIfEmpty(y, x + 1) == false)
+                            if (grid.CheckIfFieldEmpty(y, x + 1) == false)
                             {
                                 pass = false;
                             }
@@ -167,28 +170,26 @@ namespace GameScene
 
                         if (pass)
                         {
-                            Vector2 position = tetrominoTransform.position;
-                            position.x = tetrominoTransform.position.x + 1;
-                            tetrominoTransform.position = position;
+                            tetrominoTransform.Translate(new Vector3(1, 0, 0), Space.World);
                             tetrominoStats.UpdateGhost();
                         }
                         else
                         {
-                            movedR = 0;
+                            movedRighState = 0;
                         }
                     }
                 }
                 else
                 {
-                    movedR = 0;
+                    movedRighState = 0;
                 }
             }
             else
             {
-                movedR = 0;
+                movedRighState = 0;
             }
 
-            if (Input.GetKey(down))
+            if (Input.GetKey(downInput))
             {
                 bool pass = true;
 
@@ -197,48 +198,47 @@ namespace GameScene
                     tetrominoStats.LockTetromino();
                     GameManager.Instance.SumPiece(this.playerName);
                     SpawnNew();
+                    allowedToPutOnHold = true;
                     pass = false;
                 }
                 else if (pass)
                 {
-                    foreach (Transform child in tetrominoStats.transform)
+                    foreach (Transform childTile in tetrominoTransform)
                     {
-                        int x = (int)Mathf.Floor(child.position.x - transform.position.x);
-                        int y = (int)Mathf.Floor(child.position.y - transform.position.y);
+                        int x = (int)Mathf.Floor(childTile.position.x - transform.position.x);
+                        int y = (int)Mathf.Floor(childTile.position.y - transform.position.y);
 
-                        if (grid.CheckIfEmpty(y - 1, x) == false)
+                        if (grid.CheckIfFieldEmpty(y - 1, x) == false)
                         {
                             tetrominoStats.LockTetromino();
                             GameManager.Instance.SumPiece(this.playerName);
-                            allowedToHold = true;
+                            allowedToPutOnHold = true;
                             SpawnNew();
                             pass = false;
                             break;
                         }
                     }
                 }
-                if (pass && Time.time - moveDTime >= 0.08f)
+                if (pass && Time.time - moveDownTimepoint >= 0.08f)
                 {
 
 
-                    moveDTime = Time.time; 
+                    moveDownTimepoint = Time.time;
 
-                    Vector2 position = tetrominoTransform.position;
-                    position.y = tetrominoTransform.position.y - 1;
-                    tetrominoTransform.position = position;
+                    tetrominoTransform.Translate(new Vector3(0, -1, 0), Space.World);
                 }
 
             }
 
-            if (Input.GetKeyDown(drop))
+            if (Input.GetKeyDown(dropInput))
             {
                 int minY = int.MaxValue;
 
-                foreach (Transform child in tetrominoStats.transform)
+                foreach (Transform childTile in tetrominoTransform)
                 {
-                    int x = (int)Mathf.Floor(child.position.x - transform.position.x);
-                    int y = (int)Mathf.Floor(child.position.y - transform.position.y);
-                    int privY = (int)Mathf.Floor(child.position.y - transform.position.y) - grid.GetHighestY(y, x);
+                    int x = (int)Mathf.Floor(childTile.position.x - transform.position.x);
+                    int y = (int)Mathf.Floor(childTile.position.y - transform.position.y);
+                    int privY = (int)Mathf.Floor(childTile.position.y - transform.position.y) - grid.GetMaxAvailableHeight(y, x);
                     if (privY < minY)
                     {
                         minY = privY;
@@ -250,21 +250,21 @@ namespace GameScene
                 position.y = position.y - minY;
                 tetrominoTransform.position = position;
                 tetrominoStats.LockTetromino();
-                allowedToHold = true;
+                allowedToPutOnHold = true;
                 GameManager.Instance.SumPiece(this.playerName);
                 SpawnNew();
             }
 
-            if (Input.GetKeyDown(hold))
+            if (Input.GetKeyDown(holdInput))
             {
-                if (allowedToHold)
+                if (allowedToPutOnHold)
                 {
-                    queue.Hold();
-                    allowedToHold = false;
+                    tetrominoQueue.HoldTetromino();
+                    allowedToPutOnHold = false;
                 }
             }
 
-            if (Input.GetKeyDown(rotateL))
+            if (Input.GetKeyDown(rotateLeftInput))
             {
                 if (string.Equals(tetrominoStats.tetName, "cube") == false)
                 {
@@ -273,7 +273,7 @@ namespace GameScene
                 }
             }
 
-            if (Input.GetKeyDown(rotateR))
+            if (Input.GetKeyDown(rotateRightInput))
             {
                 if (string.Equals(tetrominoStats.tetName, "cube") == false)
                 {
@@ -289,7 +289,7 @@ namespace GameScene
             RotateAroundPivot(degrees);
 
             bool rotated = true;
-            if (CheckRotationAvailability() == false)
+            if (CheckRotationAvailabilityWitDisplacements() == false)
             {
                 RotateAroundPivot(-degrees);
                 rotated = false;
@@ -297,17 +297,17 @@ namespace GameScene
 
             int minY = int.MaxValue, minX = int.MaxValue, maxY = int.MinValue, maxX = int.MinValue;
 
-            foreach (Transform child in tetrominoStats.transform)
+            foreach (Transform childTile in tetrominoTransform)
             {
                 if (rotated)
                 {
-                    child.transform.Rotate(0, 0, -degrees);
+                    childTile.transform.Rotate(0, 0, -degrees);
                 }
-                int x = (int)Mathf.Floor(child.position.x - transform.position.x);
+                int x = (int)Mathf.Floor(childTile.position.x - transform.position.x);
                 if (minX > x) minX = x;
                 if (maxX < x) maxX = x;
 
-                int y = (int)Mathf.Floor(child.position.y - transform.position.y);
+                int y = (int)Mathf.Floor(childTile.position.y - transform.position.y);
                 if (minY > y) minY = y;
                 if (maxY < y) maxY = y;
             }
@@ -318,7 +318,7 @@ namespace GameScene
             tetrominoStats.right = maxX - (int)tetrominoTransform.localPosition.x + 1;
         }
 
-        private bool CheckRotationAvailability()
+        private bool CheckRotationAvailabilityWitDisplacements()
         {
             Vector3 position = tetrominoTransform.position;
             Vector3 priv;
@@ -391,35 +391,35 @@ namespace GameScene
 
         private bool CheckGrid()
         {
-            bool available = true;
-            foreach (Transform child in tetrominoTransform)
+            bool availablePosition = true;
+            foreach (Transform childTile in tetrominoTransform)
             {
-                int x = (int)Mathf.Floor(child.position.x - transform.position.x);
-                int y = (int)Mathf.Floor(child.position.y - transform.position.y);
+                int x = (int)Mathf.Floor(childTile.position.x - transform.position.x);
+                int y = (int)Mathf.Floor(childTile.position.y - transform.position.y);
                 if (y >= grid.height)
                 {
                     if (x >= grid.width || x < 0)
                     {
-                        available = false;
+                        availablePosition = false;
                     }
                 }
                 else
                 {
                     if (x >= 0 && x < grid.width && y >= 0)
                     {
-                        if (grid.CheckIfEmpty(y, x) == false)
+                        if (grid.CheckIfFieldEmpty(y, x) == false)
                         {
-                            available = false;
+                            availablePosition = false;
                         }
                     }
                     else
                     {
-                        available = false;
+                        availablePosition = false;
                     }
                 }
             }
 
-            return available;
+            return availablePosition;
         }
 
         private void RotateAroundPivot(float degrees)
@@ -430,12 +430,12 @@ namespace GameScene
                 position.x -= 0.5f;
                 position.y -= 0.5f;
                 tetrominoTransform.position = position;
-                foreach (Transform child in tetrominoTransform)
+                foreach (Transform childTile in tetrominoTransform)
                 {
-                    position = child.position;
+                    position = childTile.position;
                     position.x += 0.5f;
                     position.y += 0.5f;
-                    child.position = position;
+                    childTile.position = position;
                 }
 
             }
@@ -448,12 +448,12 @@ namespace GameScene
                 position.x += 0.5f;
                 position.y += 0.5f;
                 tetrominoTransform.position = position;
-                foreach (Transform child in tetrominoTransform)
+                foreach (Transform childTile in tetrominoTransform)
                 {
-                    position = child.position;
+                    position = childTile.position;
                     position.x -= 0.5f;
                     position.y -= 0.5f;
-                    child.position = position;
+                    childTile.position = position;
                 }
 
             }
@@ -461,41 +461,40 @@ namespace GameScene
 
         public void SpawnNew()
         {
-            queue.Next();
+            tetrominoQueue.NextTetromino();
 
-            foreach (Transform child in tetrominoTransform)
+            foreach (Transform childTile in tetrominoTransform)
             {
-                int x = (int)Mathf.Floor(child.position.x - transform.position.x);
-                int y = (int)Mathf.Floor(child.position.y - transform.position.y);
-                if (grid.CheckIfEmpty(y, x) == false)
+                int x = (int)Mathf.Floor(childTile.position.x - transform.position.x);
+                int y = (int)Mathf.Floor(childTile.position.y - transform.position.y);
+                if (grid.CheckIfFieldEmpty(y, x) == false)
                 {
                     GameManager.Instance.EndGame(playerName);
-                    foreach (Transform child2 in tetrominoTransform)
+                    foreach (Transform childTile2 in tetrominoTransform)
                     {
-                        Destroy(child2.gameObject);
+                        Destroy(childTile2.gameObject);
                     }
                     break;
                 }
             }
         }
 
-
-        internal void CheckLinesMovedAbovePiece()
+        public void CheckLinesMovedAbovePiece()
         {
 
-            foreach (Transform child in tetrominoTransform)
+            foreach (Transform childTile in tetrominoTransform)
             {
-                int x = (int)Mathf.Floor(child.position.x - transform.position.x);
-                int y = (int)Mathf.Floor(child.position.y - transform.position.y);
-                if (grid.CheckIfEmpty(y, x) == false)
+                int x = (int)Mathf.Floor(childTile.position.x - transform.position.x);
+                int y = (int)Mathf.Floor(childTile.position.y - transform.position.y);
+                if (grid.CheckIfFieldEmpty(y, x) == false)
                 {
                     int minY = int.MinValue;
 
-                    foreach (Transform child2 in tetrominoStats.transform)
+                    foreach (Transform childTile2 in tetrominoTransform)
                     {
-                        x = (int)Mathf.Floor(child2.position.x - transform.position.x);
-                        y = (int)Mathf.Floor(child2.position.y - transform.position.y);
-                        int privY = (int)transform.position.y + grid.GetHighestY(grid.height*2, x);
+                        x = (int)Mathf.Floor(childTile2.position.x - transform.position.x);
+                        y = (int)Mathf.Floor(childTile2.position.y - transform.position.y);
+                        int privY = (int)transform.position.y + grid.GetMaxAvailableHeight(grid.height * 2, x);
                         if (privY > minY)
                         {
                             minY = privY;
@@ -504,7 +503,7 @@ namespace GameScene
                     }
 
                     Vector2 position = tetrominoTransform.position;
-                    position.y = minY+1;
+                    position.y = minY + 1;
                     tetrominoTransform.position = position;
 
                     break;

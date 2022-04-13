@@ -6,16 +6,19 @@ namespace GameScene
 {
     public class TetrisGrid : MonoBehaviour
     {
-        public int height = 20;
-        public int width = 10;
-        public GameObject garbageTile;
-        public Transform spawner;
+        [SerializeField]
+        private GameObject garbageTile;
+        [SerializeField]
+        private Transform spawner;
 
         private Transform[,] matrix;
 
+        public int height = 20;
+        public int width = 10;
+
         private void Start()
         {
-            matrix = new Transform[height*2, width];
+            matrix = new Transform[height * 2, width];
             for (int i = 0; i < height; i++)
             {
                 for (int j = 0; j < width; j++)
@@ -30,7 +33,7 @@ namespace GameScene
             matrix[y, x] = tetromino;
         }
 
-        public bool CheckIfEmpty(int y, int x)
+        public bool CheckIfFieldEmpty(int y, int x)
         {
             if (matrix[y, x] == null)
             {
@@ -40,7 +43,7 @@ namespace GameScene
             return false;
         }
 
-        public int GetHighestY(int y, int x)
+        public int GetMaxAvailableHeight(int y, int x)
         {
             for (int i = y - 1; i >= 0; i--)
             {
@@ -53,13 +56,14 @@ namespace GameScene
             return 0;
         }
 
-        public void CheckLines()
+        public void CheckForCompleteLines()
         {
-            int lines = 0;
-            for(int i = 0; i < matrix.GetLength(0); i++)
+            int completeLines = 0;
+
+            for (int i = 0; i < matrix.GetLength(0); i++)
             {
                 bool detector = true;
-                for(int j = 0; j < width; j++)
+                for (int j = 0; j < width; j++)
                 {
                     if (matrix[i, j] == null)
                     {
@@ -75,7 +79,7 @@ namespace GameScene
                         Destroy(matrix[i, j].gameObject);
                     }
                     for (int k = i; k < matrix.GetLength(0) - 1; k++)
-                    { 
+                    {
                         for (int j = 0; j < width; j++)
                         {
                             if (matrix[k + 1, j] != null)
@@ -91,12 +95,12 @@ namespace GameScene
                     }
 
                     i = i - 1;
-                    lines++;
+                    completeLines++;
                 }
             }
 
-            GameManager.Instance.SendGarbageLines(GetComponentInParent<TetrominoController>().playerName, lines-1);
-            GameManager.Instance.SumLines(GetComponentInParent<TetrominoController>().playerName, lines);
+            GameManager.Instance.SendGarbageLines(GetComponentInParent<TetrominoController>().playerName, completeLines - 1);
+            GameManager.Instance.SumLines(GetComponentInParent<TetrominoController>().playerName, completeLines);
         }
 
         public void CreateGarbage()
@@ -105,16 +109,16 @@ namespace GameScene
             {
                 for (int j = 0; j < width; j++)
                 {
-                    if (matrix[k , j] != null)
+                    if (matrix[k, j] != null)
                     {
-                        matrix[k , j].Translate(Vector2.up);
+                        matrix[k, j].Translate(Vector2.up);
                     }
                     matrix[k + 1, j] = matrix[k, j];
                 }
             }
 
             int random = Random.Range(0, width);
-            for(int j = 0; j < width; j++)
+            for (int j = 0; j < width; j++)
             {
                 if (j != random)
                 {

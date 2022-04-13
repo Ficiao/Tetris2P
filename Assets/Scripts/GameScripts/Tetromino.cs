@@ -7,57 +7,58 @@ namespace GameScene
 {
     public class Tetromino : MonoBehaviour
     {
+        [SerializeField]
+        private GameObject ghostParent;
+        [SerializeField]
+        private GameObject ghostChildren;
+
+        private GameObject ghostingTetromino;
+
         public int left;
         public int right;
         public int up;
         public int down;
         public string tetName;
 
-        public GameObject ghostParent;
-        public GameObject ghostChildren;
-
-        private List<Transform> children;
-        public GameObject ghosting;
-
         private void Update()
         {
-            foreach (Transform child in transform)
+            foreach (Transform childTile in transform)
             {
-                if (child.transform.position.y - transform.parent.position.y >= 20)
+                if (childTile.transform.position.y - transform.parent.position.y >= 20)
                 {
-                    child.gameObject.SetActive(false);
+                    childTile.gameObject.SetActive(false);
                 }
-                else if (child.gameObject.activeSelf == false)
+                else if (childTile.gameObject.activeSelf == false)
                 {
-                    child.gameObject.SetActive(true);
+                    childTile.gameObject.SetActive(true);
                 }
             }
-            
+
         }
 
         public void UpdateGhost()
         {
-            if (ghosting == null)
+            if (ghostingTetromino == null)
             {
-                ghosting = Instantiate(ghostParent, transform.position, Quaternion.identity, this.transform.parent);
-                foreach (Transform child in transform)
+                ghostingTetromino = Instantiate(ghostParent, transform.position, Quaternion.identity, this.transform.parent);
+                foreach (Transform childTile in transform)
                 {
-                    Instantiate(ghostChildren, child.position, Quaternion.identity, ghosting.transform);
+                    Instantiate(ghostChildren, childTile.position, Quaternion.identity, ghostingTetromino.transform);
                 }
             }
 
             int minY = int.MaxValue;
 
-            ghosting.transform.position = this.transform.position;
-            for (int i = 0; i < ghosting.transform.childCount; i++)
+            ghostingTetromino.transform.position = this.transform.position;
+            for (int i = 0; i < ghostingTetromino.transform.childCount; i++)
             {
-                ghosting.transform.GetChild(i).position = this.transform.GetChild(i).position;
+                ghostingTetromino.transform.GetChild(i).position = this.transform.GetChild(i).position;
             }
 
-            foreach (Transform child in transform)
+            foreach (Transform childTile in transform)
             {
-                int x = (int)(Mathf.Floor(child.position.x) - this.transform.parent.position.x);
-                int y = (int)(Mathf.Floor(child.position.y) - this.transform.parent.position.y);
+                int x = (int)(Mathf.Floor(childTile.position.x) - this.transform.parent.position.x);
+                int y = (int)(Mathf.Floor(childTile.position.y) - this.transform.parent.position.y);
                 if (x < 0)
                 {
                     x = 0;
@@ -66,7 +67,7 @@ namespace GameScene
                 {
                     x = 9;
                 }
-                int privY = (int)Mathf.Floor(child.position.y) - GetComponentInParent<TetrominoController>().grid.GetHighestY(y, x);
+                int privY = (int)Mathf.Floor(childTile.position.y) - GetComponentInParent<TetrominoController>().grid.GetMaxAvailableHeight(y, x);
                 if (privY < minY)
                 {
                     minY = privY;
@@ -74,57 +75,60 @@ namespace GameScene
 
             }
 
-            ghosting.transform.position = new Vector3(this.transform.position.x, this.transform.position.y - minY, -1f);
+            ghostingTetromino.transform.position = new Vector3(this.transform.position.x, this.transform.position.y - minY, -1f);
 
-            foreach (Transform child in ghosting.transform)
+            foreach (Transform ghostChildTile in ghostingTetromino.transform)
             {
-                if (child.transform.position.y - transform.parent.position.y >= 20)
+                if (ghostChildTile.transform.position.y - transform.parent.position.y >= 20)
                 {
-                    child.gameObject.SetActive(false);
+                    ghostChildTile.gameObject.SetActive(false);
                 }
-                else if (child.gameObject.activeSelf == false)
+                else if (ghostChildTile.gameObject.activeSelf == false)
                 {
-                    child.gameObject.SetActive(true);
+                    ghostChildTile.gameObject.SetActive(true);
                 }
             }
         }
 
+        public void DestroyGhost()
+        {
+            foreach (Transform ghostChildTile in ghostingTetromino.transform)
+            {
+                Destroy(ghostChildTile.gameObject);
+            }
+            Destroy(ghostingTetromino.gameObject);
+        }
+
         public void LockTetromino()
         {
-            children = new List<Transform>();
-            foreach (Transform child in transform)
+            List<Transform> children = new List<Transform>();
+            foreach (Transform childTile in transform)
             {
-                if (child.transform.position.y - transform.parent.position.y >= 20)
+                if (childTile.transform.position.y - transform.parent.position.y >= 20)
                 {
-                    child.gameObject.SetActive(false);
+                    childTile.gameObject.SetActive(false);
                 }
-                else if (child.gameObject.activeSelf == false)
+                else if (childTile.gameObject.activeSelf == false)
                 {
-                    child.gameObject.SetActive(true);
+                    childTile.gameObject.SetActive(true);
                 }
 
-                children.Add(child);
-                int x = (int)Mathf.Floor(child.position.x - transform.parent.position.x);
-                int y = (int)Mathf.Floor(child.position.y - transform.parent.position.y);
+                children.Add(childTile);
+                int x = (int)Mathf.Floor(childTile.position.x - transform.parent.position.x);
+                int y = (int)Mathf.Floor(childTile.position.y - transform.parent.position.y);
 
-                TetrisGrid priv = GetComponentInParent<TetrominoController>().grid;
-                priv.Add(child.transform, y, x);
-
+                GetComponentInParent<TetrominoController>().grid.Add(childTile.transform, y, x);
             }
 
-            foreach (Transform child in children)
+            foreach (Transform childTile in children)
             {
-                child.parent = this.transform.parent;
+                childTile.parent = this.transform.parent;
             }
 
-            foreach (Transform child in ghosting.transform)
-            {
-                Destroy(child.gameObject);
-            }
-            Destroy(ghosting.gameObject);
+            DestroyGhost();
             Destroy(gameObject);
 
-            GetComponentInParent<TetrominoController>().grid.CheckLines();
+            GetComponentInParent<TetrominoController>().grid.CheckForCompleteLines();
         }
 
     }

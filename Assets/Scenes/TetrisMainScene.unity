@@ -293,51 +293,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 198398190}
   m_CullTransparentMesh: 1
---- !u!1 &212151661
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 212151663}
-  - component: {fileID: 212151662}
-  m_Layer: 0
-  m_Name: LoadData
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &212151662
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 212151661}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5aeb3c109db0cad4c8d8bcd31dd2e262, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  score1: 0
-  score2: 0
---- !u!4 &212151663
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 212151661}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 380.63214, y: 406.84622, z: -379.2541}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &246350350 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3132637491542197919, guid: 126ce818b841c9a4991ec71c6deb32a9, type: 3}
@@ -355,8 +310,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1136ef2f95aaf79448eed975ba7bd573, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hold: {fileID: 918016894}
-  tetrominos:
+  holdPosition: {fileID: 918016894}
+  tetrominoPrefabs:
   - {fileID: 8355021603802274225, guid: 32b95a50a292a2041ab254f5b43bd918, type: 3}
   - {fileID: 3797490599746884121, guid: d5117fb3113fda34fb8d88fbd4421804, type: 3}
   - {fileID: 1262584091967160790, guid: 1e591884dd90f4140a662fc45a6d6780, type: 3}
@@ -366,6 +321,7 @@ MonoBehaviour:
   - {fileID: 973623373400173089, guid: 959d23bde470d6242b9427efe4025d6c, type: 3}
   spawner: {fileID: 155091792}
   controller: {fileID: 315911066}
+  queueLenght: 4
 --- !u!1 &297275131
 GameObject:
   m_ObjectHideFlags: 0
@@ -1092,8 +1048,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1136ef2f95aaf79448eed975ba7bd573, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hold: {fileID: 709202697}
-  tetrominos:
+  holdPosition: {fileID: 709202697}
+  tetrominoPrefabs:
   - {fileID: 8355021603802274225, guid: 32b95a50a292a2041ab254f5b43bd918, type: 3}
   - {fileID: 3797490599746884121, guid: d5117fb3113fda34fb8d88fbd4421804, type: 3}
   - {fileID: 1262584091967160790, guid: 1e591884dd90f4140a662fc45a6d6780, type: 3}
@@ -1103,6 +1059,7 @@ MonoBehaviour:
   - {fileID: 973623373400173089, guid: 959d23bde470d6242b9427efe4025d6c, type: 3}
   spawner: {fileID: 1234900579}
   controller: {fileID: 491587064}
+  queueLenght: 4
 --- !u!1 &605740713
 GameObject:
   m_ObjectHideFlags: 0
@@ -1571,8 +1528,40 @@ PrefabInstance:
       value: z
       objectReference: {fileID: 0}
     - target: {fileID: 5888242163906165196, guid: 126ce818b841c9a4991ec71c6deb32a9, type: 3}
+      propertyPath: downInput
+      value: s
+      objectReference: {fileID: 0}
+    - target: {fileID: 5888242163906165196, guid: 126ce818b841c9a4991ec71c6deb32a9, type: 3}
+      propertyPath: dropInput
+      value: space
+      objectReference: {fileID: 0}
+    - target: {fileID: 5888242163906165196, guid: 126ce818b841c9a4991ec71c6deb32a9, type: 3}
+      propertyPath: holdInput
+      value: t
+      objectReference: {fileID: 0}
+    - target: {fileID: 5888242163906165196, guid: 126ce818b841c9a4991ec71c6deb32a9, type: 3}
+      propertyPath: leftInput
+      value: a
+      objectReference: {fileID: 0}
+    - target: {fileID: 5888242163906165196, guid: 126ce818b841c9a4991ec71c6deb32a9, type: 3}
       propertyPath: playerName
       value: PLAYER ONE
+      objectReference: {fileID: 0}
+    - target: {fileID: 5888242163906165196, guid: 126ce818b841c9a4991ec71c6deb32a9, type: 3}
+      propertyPath: rightInput
+      value: d
+      objectReference: {fileID: 0}
+    - target: {fileID: 5888242163906165196, guid: 126ce818b841c9a4991ec71c6deb32a9, type: 3}
+      propertyPath: tetrominoQueue
+      value: 
+      objectReference: {fileID: 503412541}
+    - target: {fileID: 5888242163906165196, guid: 126ce818b841c9a4991ec71c6deb32a9, type: 3}
+      propertyPath: rotateLeftInput
+      value: z
+      objectReference: {fileID: 0}
+    - target: {fileID: 5888242163906165196, guid: 126ce818b841c9a4991ec71c6deb32a9, type: 3}
+      propertyPath: rotateRightInput
+      value: u
       objectReference: {fileID: 0}
     - target: {fileID: 8736808403635556965, guid: 126ce818b841c9a4991ec71c6deb32a9, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2703,8 +2692,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player1Score: {fileID: 1852264833}
   player2Score: {fileID: 2086032948}
-  player1SumLines: {fileID: 1763333468}
-  player2SumLines: {fileID: 299533206}
+  player1LinesCleared: {fileID: 1763333468}
+  player2LinesCleared: {fileID: 299533206}
   player1PPS: {fileID: 725952174}
   player2PPS: {fileID: 198398192}
   ui: {fileID: 2055868511}
@@ -2713,9 +2702,9 @@ MonoBehaviour:
   playerWins: {fileID: 445639641}
   playAgane: {fileID: 2035623729}
   quit: {fileID: 1778843095}
-  pieces1: 0
-  pieces2: 0
-  startTime: 0
+  loadData: {fileID: 11400000, guid: 036c5d34d8fabb446b22bb8cf1839125, type: 2}
+  piecesPlaced1: 0
+  piecesPlaced2: 0
 --- !u!4 &1907288283
 Transform:
   m_ObjectHideFlags: 0
@@ -3512,8 +3501,40 @@ PrefabInstance:
       value: enter
       objectReference: {fileID: 0}
     - target: {fileID: 5888242163906165196, guid: 126ce818b841c9a4991ec71c6deb32a9, type: 3}
+      propertyPath: downInput
+      value: down
+      objectReference: {fileID: 0}
+    - target: {fileID: 5888242163906165196, guid: 126ce818b841c9a4991ec71c6deb32a9, type: 3}
+      propertyPath: dropInput
+      value: '[1]'
+      objectReference: {fileID: 0}
+    - target: {fileID: 5888242163906165196, guid: 126ce818b841c9a4991ec71c6deb32a9, type: 3}
+      propertyPath: holdInput
+      value: '[2]'
+      objectReference: {fileID: 0}
+    - target: {fileID: 5888242163906165196, guid: 126ce818b841c9a4991ec71c6deb32a9, type: 3}
+      propertyPath: leftInput
+      value: left
+      objectReference: {fileID: 0}
+    - target: {fileID: 5888242163906165196, guid: 126ce818b841c9a4991ec71c6deb32a9, type: 3}
       propertyPath: playerName
       value: PLAYER TWO
+      objectReference: {fileID: 0}
+    - target: {fileID: 5888242163906165196, guid: 126ce818b841c9a4991ec71c6deb32a9, type: 3}
+      propertyPath: rightInput
+      value: right
+      objectReference: {fileID: 0}
+    - target: {fileID: 5888242163906165196, guid: 126ce818b841c9a4991ec71c6deb32a9, type: 3}
+      propertyPath: tetrominoQueue
+      value: 
+      objectReference: {fileID: 246350352}
+    - target: {fileID: 5888242163906165196, guid: 126ce818b841c9a4991ec71c6deb32a9, type: 3}
+      propertyPath: rotateLeftInput
+      value: '[3]'
+      objectReference: {fileID: 0}
+    - target: {fileID: 5888242163906165196, guid: 126ce818b841c9a4991ec71c6deb32a9, type: 3}
+      propertyPath: rotateRightInput
+      value: enter
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 126ce818b841c9a4991ec71c6deb32a9, type: 3}

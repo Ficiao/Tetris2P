@@ -8,13 +8,22 @@ namespace GameScene
     public class GameManager : MonoBehaviour
     {
         private static GameManager _instance;
-        public GameObject[] Tetrominos;
-        public Transform spawner1;
-        public Transform spawner2;
-        public TetrominoController tetrominoController1;
-        public TetrominoController tetrominoController2;
-        public TetrisQueue queue1;
-        public TetrisQueue queue2;
+
+        [SerializeField]
+        private GameObject[] Tetrominos;
+        [SerializeField]
+        private Transform spawner1;
+        [SerializeField]
+        private Transform spawner2;
+        [SerializeField]
+        private TetrominoController tetrominoController1;
+        [SerializeField]
+        private TetrominoController tetrominoController2;
+        [SerializeField]
+        private TetrisQueue queue1;
+        [SerializeField]
+        private TetrisQueue queue2;
+
         private IEnumerator dropCoroutine;
 
         public static GameManager Instance { get { return _instance; } }
@@ -41,8 +50,8 @@ namespace GameScene
             queue1.FillQueue();
             queue2.FillQueue();
 
-            queue1.Next();
-            queue2.Next();
+            queue1.NextTetromino();
+            queue2.NextTetromino();
 
             dropCoroutine = DropTime();
             StartCoroutine(dropCoroutine);
@@ -100,15 +109,15 @@ namespace GameScene
             }
         }
 
-        public void SumLines(string playerName, int lines)
+        public void SumLines(string playerName, int linesCleared)
         {
             if (string.Equals(tetrominoController1.playerName, playerName))
             {
-                UIManager.Instance.SumLines1(lines);
+                UIManager.Instance.SumLinesClearedPlayer1(linesCleared);
             }
             else
             {
-                UIManager.Instance.SumLines2(lines);
+                UIManager.Instance.SumLinesClearedPlayer2(linesCleared);
             }
         }
 
@@ -116,11 +125,11 @@ namespace GameScene
         {
             if (string.Equals(tetrominoController1.playerName, playerName))
             {
-                UIManager.Instance.pieces1++;
+                UIManager.Instance.piecesPlaced1++;
             }
             else
             {
-                UIManager.Instance.pieces2++;
+                UIManager.Instance.piecesPlaced2++;
             }
         }
     }

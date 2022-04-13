@@ -11,24 +11,40 @@ namespace GameScene
     {
         private static UIManager _instance;
         public static UIManager Instance { get { return _instance; } }
-        public TextMeshProUGUI player1Score;
-        public TextMeshProUGUI player2Score;
-        public TextMeshProUGUI player1SumLines;
-        public TextMeshProUGUI player2SumLines;
-        public TextMeshProUGUI player1PPS;
-        public TextMeshProUGUI player2PPS;
-        public Transform ui;
-        public GameObject ready;
-        public GameObject go;
-        public GameObject playerWins;
-        public GameObject playAgane;
-        public GameObject quit;
-        private int sumLines1;
-        private int sumLines2;
-        public int pieces1;
-        public int pieces2;
+
+        [SerializeField]
+        private TextMeshProUGUI player1Score;
+        [SerializeField]
+        private TextMeshProUGUI player2Score;
+        [SerializeField]
+        private TextMeshProUGUI player1LinesCleared;
+        [SerializeField]
+        private TextMeshProUGUI player2LinesCleared;
+        [SerializeField]
+        private TextMeshProUGUI player1PPS;
+        [SerializeField]
+        private TextMeshProUGUI player2PPS;
+        [SerializeField]
+        private Transform ui;
+        [SerializeField]
+        private GameObject ready;
+        [SerializeField]
+        private GameObject go;
+        [SerializeField]
+        private GameObject playerWins;
+        [SerializeField]
+        private GameObject playAgane;
+        [SerializeField]
+        private GameObject quit;
+
+        public LoadData loadData;
+
+        private int sumLinesCleared1;
+        private int sumLinesCleared2;
+        public int piecesPlaced1;
+        public int piecesPlaced2;
         private IEnumerator countPPS;
-        public float startTime;
+        private float startTime;
 
         private void Awake()
         {
@@ -55,10 +71,10 @@ namespace GameScene
         {
             while (true)
             {
-                yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSeconds(0.01f);
 
-                player1PPS.SetText("PIECES PER SECOND: " + String.Format("{0:0.00}", pieces1 / (Time.time - startTime)));
-                player2PPS.SetText("PIECES PER SECOND: " + String.Format("{0:0.00}", pieces2 / (Time.time - startTime)));
+                player1PPS.SetText("PIECES PER SECOND: " + String.Format("{0:0.00}", piecesPlaced1 / (Time.time - startTime)));
+                player2PPS.SetText("PIECES PER SECOND: " + String.Format("{0:0.00}", piecesPlaced2 / (Time.time - startTime)));
             }
         }
 
@@ -75,8 +91,8 @@ namespace GameScene
 
         public void SetScores()
         {
-            player1Score.SetText(LoadData.Instance.Wins1().ToString());
-            player2Score.SetText(LoadData.Instance.Wins2().ToString());
+            player1Score.SetText(loadData.score1.ToString());
+            player2Score.SetText(loadData.score2.ToString());
         }
 
         public void GameEndScreen(string playerName, int winner)
@@ -85,13 +101,13 @@ namespace GameScene
 
             if (winner == 1)
             {
-                LoadData.Instance.Player1Wins();
-                player1Score.SetText(LoadData.Instance.Wins1().ToString());
+                loadData.score1++;
+                player1Score.SetText(loadData.score1.ToString());
             }
             else
             {
-                LoadData.Instance.Player2Wins();
-                player2Score.SetText(LoadData.Instance.Wins2().ToString());
+                loadData.score2++;
+                player2Score.SetText(loadData.score2.ToString());
             }
 
             playerWins.SetActive(true);
@@ -110,17 +126,17 @@ namespace GameScene
             Application.Quit();
         }
 
-        internal void SumLines1(int lines)
+        internal void SumLinesClearedPlayer1(int lines)
         {
-            sumLines1 += lines;
-            player1SumLines.SetText("LINES CLEARED: " + sumLines1);
+            sumLinesCleared1 += lines;
+            player1LinesCleared.SetText("LINES CLEARED: " + sumLinesCleared1);
             
         }
 
-        internal void SumLines2(int lines)
+        internal void SumLinesClearedPlayer2(int lines)
         {
-            sumLines2 += lines;
-            player2SumLines.SetText("LINES CLEARED: " + sumLines2);
+            sumLinesCleared2 += lines;
+            player2LinesCleared.SetText("LINES CLEARED: " + sumLinesCleared2);
         }
     }
 }
