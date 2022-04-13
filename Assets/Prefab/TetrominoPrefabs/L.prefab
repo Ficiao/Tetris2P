@@ -213,8 +213,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b36ef8a68270eb94694847b920ac3d7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  left: 1
-  right: 2
+  left: 2
+  right: 1
   up: 1
   down: 1
   tetName: ghost

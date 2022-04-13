@@ -55,14 +55,15 @@ namespace GameScene
                 GameObject priv = held;
                 priv.transform.position = spawner.position;
 
+                foreach (Transform child in controller.tetromino.transform)
+                {
+                    Destroy(child.gameObject);
+                }
+
                 foreach (GameObject piece in tetrominos)
                 {
                     if (string.Equals(piece.GetComponent<Tetromino>().tetName, controller.tetromino.GetComponent<Tetromino>().tetName))
                     {
-                        foreach (Transform child in controller.tetromino.transform)
-                        {
-                            Destroy(child.gameObject);
-                        }
                         Destroy(controller.tetromino.gameObject);
                         held = Instantiate(piece, hold.position, Quaternion.identity, spawner.transform.parent);
                     }
@@ -81,14 +82,15 @@ namespace GameScene
                 }
                 Destroy(controller.tetromino.GetComponent<Tetromino>().ghosting.gameObject);
 
-                foreach(GameObject piece in tetrominos)
+                foreach (Transform child in controller.tetromino.transform)
+                {
+                    Destroy(child.gameObject);
+                }
+
+                foreach (GameObject piece in tetrominos)
                 {
                     if(string.Equals(piece.GetComponent<Tetromino>().tetName, controller.tetromino.GetComponent<Tetromino>().tetName))
                     {
-                        foreach(Transform child in controller.tetromino.transform)
-                        {
-                            Destroy(child.gameObject);
-                        }
                         Destroy(controller.tetromino.gameObject);
                         held = Instantiate(piece, hold.position, Quaternion.identity, spawner.transform.parent);
                     }
