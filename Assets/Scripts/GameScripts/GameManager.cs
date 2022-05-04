@@ -40,9 +40,13 @@ namespace GameScene
             }
         }
 
-        private void Start()
+        void OnEnable()
         {
-            UIManager.Instance.GameStart();
+            TetrominoController.GameEnd += EndGame;
+        }
+        void OnDisable()
+        {
+            TetrominoController.GameEnd -= EndGame;
         }
 
         public void GameStart()
@@ -70,15 +74,6 @@ namespace GameScene
         internal void EndGame(string playerName)
         {
             StopCoroutine(dropCoroutine);
-            
-            if (string.Equals(tetrominoController1.playerName,playerName))
-            {
-                UIManager.Instance.GameEndScreen(tetrominoController2.playerName, 2);
-            }
-            else
-            {
-                UIManager.Instance.GameEndScreen(tetrominoController1.playerName, 1);
-            }
             tetrominoController1.enabled = false;
             tetrominoController2.enabled = false;
         }

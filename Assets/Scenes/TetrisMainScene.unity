@@ -2702,6 +2702,8 @@ MonoBehaviour:
   playerWins: {fileID: 445639641}
   playAgane: {fileID: 2035623729}
   quit: {fileID: 1778843095}
+  player1Name: PLAYER ONE
+  player2Name: PLAYER TWO
   loadData: {fileID: 11400000, guid: 036c5d34d8fabb446b22bb8cf1839125, type: 2}
   piecesPlaced1: 0
   piecesPlaced2: 0

@@ -2,6 +2,8 @@ using UnityEngine;
 
 namespace GameScene
 {
+    public delegate void GameEnd(string playerName);
+
     public class TetrominoController : MonoBehaviour
     {
         [SerializeField]
@@ -22,6 +24,9 @@ namespace GameScene
         private TetrisQueue tetrominoQueue;
         [SerializeField]
         public TetrisGrid grid;
+        public int id;
+
+        public static event GameEnd GameEnd;
 
         public string playerName;      
         private bool allowedToPutOnHold;
@@ -88,50 +93,7 @@ namespace GameScene
         {
             if (Input.GetKey(leftInput))
             {
-                if (tetrominoTransform.localPosition.x > tetrominoStats.left)
-                {
-                    if ((movedLefState == 0 && Input.GetKeyDown(leftInput)) || (movedLefState == 1 && Time.time - moveLeftTimepoint >= 0.23f)
-                        || (movedLefState == 2 && Time.time - moveLeftTimepoint >= 0.013f))
-                    {
-                        if (movedLefState == 0)
-                        {
-                            movedLefState = 1;
-                        }
-                        else
-                        {
-                            movedLefState = 2;
-                        }
-
-                        moveLeftTimepoint = Time.time;
-
-                        bool pass = true;
-                        foreach (Transform childTile in tetrominoTransform)
-                        {
-                            int x = (int)Mathf.Floor(childTile.position.x - transform.position.x);
-                            int y = (int)Mathf.Floor(childTile.position.y - transform.position.y);
-
-                            if (grid.CheckIfFieldEmpty(y, x - 1) == false)
-                            {
-                                pass = false;
-                            }
-                        }
-
-                        if (pass)
-                        {
-                            tetrominoTransform.Translate(new Vector3(-1, 0, 0), Space.World);
-                            tetrominoStats.UpdateGhost();
-                        }
-
-                        else
-                        {
-                            movedLefState = 0;
-                        }
-                    }
-                }
-                else
-                {
-                    movedLefState = 0;
-                }
+                MoveLeft();
             }
             else
             {
@@ -140,49 +102,7 @@ namespace GameScene
 
             if (Input.GetKey(rightInput))
             {
-                if (tetrominoTransform.localPosition.x < grid.width - tetrominoStats.right)
-                {
-                    if ((movedRighState == 0 && Input.GetKeyDown(rightInput)) || (movedRighState == 1 && Time.time - moveRightTimepoint >= 0.23f)
-                        || (movedRighState == 2 && Time.time - moveRightTimepoint >= 0.013f))
-                    {
-                        if (movedRighState == 0)
-                        {
-                            movedRighState = 1;
-                        }
-                        else
-                        {
-                            movedRighState = 2;
-                        }
-
-                        moveRightTimepoint = Time.time;
-
-                        bool pass = true;
-                        foreach (Transform childTile in tetrominoTransform)
-                        {
-                            int x = (int)Mathf.Floor(childTile.position.x - transform.position.x);
-                            int y = (int)Mathf.Floor(childTile.position.y - transform.position.y);
-
-                            if (grid.CheckIfFieldEmpty(y, x + 1) == false)
-                            {
-                                pass = false;
-                            }
-                        }
-
-                        if (pass)
-                        {
-                            tetrominoTransform.Translate(new Vector3(1, 0, 0), Space.World);
-                            tetrominoStats.UpdateGhost();
-                        }
-                        else
-                        {
-                            movedRighState = 0;
-                        }
-                    }
-                }
-                else
-                {
-                    movedRighState = 0;
-                }
+                MoveRight();
             }
             else
             {
@@ -284,12 +204,106 @@ namespace GameScene
 
         }
 
+        private void MoveRight()
+        {
+            if (tetrominoTransform.localPosition.x >= grid.width - tetrominoStats.right)
+            {
+                movedRighState = 0;
+                return;
+            }
+
+            if (movedRighState == 0 || (movedRighState == 1 && Time.time - moveRightTimepoint >= 0.23f)
+                || (movedRighState == 2 && Time.time - moveRightTimepoint >= 0.013f))
+            {
+                if (movedRighState == 0)
+                {
+                    movedRighState = 1;
+                }
+                else
+                {
+                    movedRighState = 2;
+                }
+
+                moveRightTimepoint = Time.time;
+
+                bool pass = true;
+                foreach (Transform childTile in tetrominoTransform)
+                {
+                    int x = (int)Mathf.Floor(childTile.position.x - transform.position.x);
+                    int y = (int)Mathf.Floor(childTile.position.y - transform.position.y);
+
+                    if (grid.CheckIfFieldEmpty(y, x + 1) == false)
+                    {
+                        pass = false;
+                    }
+                }
+
+                if (pass)
+                {
+                    tetrominoTransform.Translate(new Vector3(1, 0, 0), Space.World);
+                    tetrominoStats.UpdateGhost();
+                }
+                else
+                {
+                    movedRighState = 0;
+                }
+            }
+        }
+
+        private void MoveLeft()
+        {
+            if (tetrominoTransform.localPosition.x <= tetrominoStats.left)
+            {
+                movedLefState = 0;
+                return;
+            }
+
+            if (movedLefState == 0 || (movedLefState == 1 && Time.time - moveLeftTimepoint >= 0.23f)
+                || (movedLefState == 2 && Time.time - moveLeftTimepoint >= 0.013f))
+            {
+                if (movedLefState == 0)
+                {
+                    movedLefState = 1;
+                }
+                else
+                {
+                    movedLefState = 2;
+                }
+
+                moveLeftTimepoint = Time.time;
+
+                bool pass = true;
+                foreach (Transform childTile in tetrominoTransform)
+                {
+                    int x = (int)Mathf.Floor(childTile.position.x - transform.position.x);
+                    int y = (int)Mathf.Floor(childTile.position.y - transform.position.y);
+
+                    if (grid.CheckIfFieldEmpty(y, x - 1) == false)
+                    {
+                        pass = false;
+                    }
+                }
+
+                if (pass)
+                {
+                    tetrominoTransform.Translate(new Vector3(-1, 0, 0), Space.World);
+                    tetrominoStats.UpdateGhost();
+                }
+
+                else
+                {
+                    movedLefState = 0;
+                }
+            }
+            
+        }
+
         private void Rotate(float degrees)
         {
             RotateAroundPivot(degrees);
 
             bool rotated = true;
-            if (CheckRotationAvailabilityWitDisplacements() == false)
+            if (GridChecker.CheckRotationAvailabilityWitDisplacements(tetrominoTransform, tetrominoStats, grid, transform.position) == false)
             {
                 RotateAroundPivot(-degrees);
                 rotated = false;
@@ -316,110 +330,6 @@ namespace GameScene
             tetrominoStats.down = (int)tetrominoTransform.localPosition.y - minY;
             tetrominoStats.left = (int)tetrominoTransform.localPosition.x - minX;
             tetrominoStats.right = maxX - (int)tetrominoTransform.localPosition.x + 1;
-        }
-
-        private bool CheckRotationAvailabilityWitDisplacements()
-        {
-            Vector3 position = tetrominoTransform.position;
-            Vector3 priv;
-
-            if (CheckGrid())
-            {
-                return true;
-            }
-
-            priv = position;
-            priv.x -= 1;
-            tetrominoTransform.position = priv;
-
-            if (CheckGrid())
-            {
-                return true;
-            }
-
-            priv = position;
-            priv.x += 1;
-            tetrominoTransform.position = priv;
-
-            if (CheckGrid())
-            {
-                return true;
-            }
-
-            priv = position;
-            priv.y -= 1;
-            tetrominoTransform.position = priv;
-
-            if (CheckGrid())
-            {
-                return true;
-            }
-
-            priv = position;
-            priv.x += 1;
-            tetrominoTransform.position = priv;
-
-            if (CheckGrid())
-            {
-                return true;
-            }
-
-            if (string.Equals(tetrominoStats.tetName, "long") == true)
-            {
-                priv = position;
-                priv.x += 2;
-                tetrominoTransform.position = priv;
-
-                if (CheckGrid())
-                {
-                    return true;
-                }
-
-                priv = position;
-                priv.x -= 2;
-                tetrominoTransform.position = priv;
-
-                if (CheckGrid())
-                {
-                    return true;
-                }
-            }
-
-            tetrominoTransform.position = position;
-            return false;
-        }
-
-        private bool CheckGrid()
-        {
-            bool availablePosition = true;
-            foreach (Transform childTile in tetrominoTransform)
-            {
-                int x = (int)Mathf.Floor(childTile.position.x - transform.position.x);
-                int y = (int)Mathf.Floor(childTile.position.y - transform.position.y);
-                if (y >= grid.height)
-                {
-                    if (x >= grid.width || x < 0)
-                    {
-                        availablePosition = false;
-                    }
-                }
-                else
-                {
-                    if (x >= 0 && x < grid.width && y >= 0)
-                    {
-                        if (grid.CheckIfFieldEmpty(y, x) == false)
-                        {
-                            availablePosition = false;
-                        }
-                    }
-                    else
-                    {
-                        availablePosition = false;
-                    }
-                }
-            }
-
-            return availablePosition;
         }
 
         private void RotateAroundPivot(float degrees)
@@ -469,7 +379,7 @@ namespace GameScene
                 int y = (int)Mathf.Floor(childTile.position.y - transform.position.y);
                 if (grid.CheckIfFieldEmpty(y, x) == false)
                 {
-                    GameManager.Instance.EndGame(playerName);
+                    GameEnd?.Invoke(this.playerName);
                     foreach (Transform childTile2 in tetrominoTransform)
                     {
                         Destroy(childTile2.gameObject);
@@ -481,34 +391,7 @@ namespace GameScene
 
         public void CheckLinesMovedAbovePiece()
         {
-
-            foreach (Transform childTile in tetrominoTransform)
-            {
-                int x = (int)Mathf.Floor(childTile.position.x - transform.position.x);
-                int y = (int)Mathf.Floor(childTile.position.y - transform.position.y);
-                if (grid.CheckIfFieldEmpty(y, x) == false)
-                {
-                    int minY = int.MinValue;
-
-                    foreach (Transform childTile2 in tetrominoTransform)
-                    {
-                        x = (int)Mathf.Floor(childTile2.position.x - transform.position.x);
-                        y = (int)Mathf.Floor(childTile2.position.y - transform.position.y);
-                        int privY = (int)transform.position.y + grid.GetMaxAvailableHeight(grid.height * 2, x);
-                        if (privY > minY)
-                        {
-                            minY = privY;
-                        }
-
-                    }
-
-                    Vector2 position = tetrominoTransform.position;
-                    position.y = minY + 1;
-                    tetrominoTransform.position = position;
-
-                    break;
-                }
-            }
+            GridChecker.CheckLinesMovedAbovePiece(tetrominoTransform, grid, transform.position);
         }
 
     }

@@ -36,8 +36,12 @@ namespace GameScene
         private GameObject playAgane;
         [SerializeField]
         private GameObject quit;
+        [SerializeField]
+        private string player1Name;
+        [SerializeField]
+        private string player2Name;
 
-        public LoadData loadData;
+        public LoadData loadData;       
 
         private int sumLinesCleared1;
         private int sumLinesCleared2;
@@ -58,11 +62,17 @@ namespace GameScene
             }
         }
 
-        public void GameStart()
+        void OnEnable()
         {
-            countPPS = PPSCounter();
-            StartCoroutine(countPPS);
-            startTime = Time.time;
+            TetrominoController.GameEnd += GameEndScreen;
+        }
+        void OnDisable()
+        {
+            TetrominoController.GameEnd -= GameEndScreen;
+        }
+
+        private void Start()
+        {
             SetScores();
             StartCoroutine(StartingGame());
         }
@@ -71,7 +81,7 @@ namespace GameScene
         {
             while (true)
             {
-                yield return new WaitForSeconds(0.01f);
+                yield return new WaitForSeconds(0.1f);
 
                 player1PPS.SetText("PIECES PER SECOND: " + String.Format("{0:0.00}", piecesPlaced1 / (Time.time - startTime)));
                 player2PPS.SetText("PIECES PER SECOND: " + String.Format("{0:0.00}", piecesPlaced2 / (Time.time - startTime)));
@@ -86,6 +96,10 @@ namespace GameScene
             go.SetActive(true);
             yield return new WaitForSeconds(1);
             go.SetActive(false);
+
+            countPPS = PPSCounter();
+            StartCoroutine(countPPS);
+            startTime = Time.time;
             GameManager.Instance.GameStart();
         }
 
@@ -95,23 +109,24 @@ namespace GameScene
             player2Score.SetText(loadData.score2.ToString());
         }
 
-        public void GameEndScreen(string playerName, int winner)
+        public void GameEndScreen(string playerName)
         {
             StopCoroutine(countPPS);
+            playerWins.SetActive(true);
 
-            if (winner == 1)
+            if (string.Equals(player2Name, playerName))
             {
                 loadData.score1++;
                 player1Score.SetText(loadData.score1.ToString());
+                playerWins.transform.GetChild(1).GetComponent<TextMeshProUGUI>().SetText(player1Name + " WINS!");
             }
             else
             {
                 loadData.score2++;
                 player2Score.SetText(loadData.score2.ToString());
+                playerWins.transform.GetChild(1).GetComponent<TextMeshProUGUI>().SetText(player2Name + " WINS!");
             }
 
-            playerWins.SetActive(true);
-            playerWins.transform.GetChild(1).GetComponent<TextMeshProUGUI>().SetText(playerName + " WINS!");
             playAgane.SetActive(true);
             quit.SetActive(true);
         }
