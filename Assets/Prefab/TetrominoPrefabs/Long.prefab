@@ -107,7 +107,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1262584091967160790}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -117,7 +117,7 @@ Transform:
   - {fileID: 2426418118732115843}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!114 &5303598582371409819
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -130,14 +130,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b36ef8a68270eb94694847b920ac3d7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ghostParent: {fileID: 2728000668059431313, guid: 0d0dbba733859aa4aaf68ed59f0c85e1, type: 3}
+  ghostChildren: {fileID: 5718479279734066114, guid: e582740c48ec70d45a4c4017befc2f9f, type: 3}
   left: 2
   right: 2
   up: 0
   down: 1
   tetName: long
-  ghostParent: {fileID: 2728000668059431313, guid: 0d0dbba733859aa4aaf68ed59f0c85e1, type: 3}
-  ghostChildren: {fileID: 5718479279734066114, guid: e582740c48ec70d45a4c4017befc2f9f, type: 3}
-  ghosting: {fileID: 0}
 --- !u!1 &2752518961495294844
 GameObject:
   m_ObjectHideFlags: 0

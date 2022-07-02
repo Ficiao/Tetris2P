@@ -44,7 +44,7 @@ namespace GameScene
             }
 
             priv = position;
-            priv.x += 1;
+            priv.y += 1;
             tetrominoTransform.position = priv;
 
             if (CheckGrid(tetrominoTransform, grid, gridPosition))
