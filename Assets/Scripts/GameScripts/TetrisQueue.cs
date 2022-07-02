@@ -82,6 +82,7 @@ namespace GameScene
                 {
                     Destroy(controller.tetromino.gameObject);
                     currentlyHeld = Instantiate(piece, holdPosition.position, Quaternion.identity, spawner.transform.parent);
+                    break;
                 }
             }
         }

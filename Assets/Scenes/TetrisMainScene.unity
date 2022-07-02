@@ -193,7 +193,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 252.23999, y: -692}
+  m_AnchoredPosition: {x: 252.24023, y: -692}
   m_SizeDelta: {x: -1718.6217, y: -1723.1141}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &198398192
@@ -490,7 +490,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 252.24, y: -646}
+  m_AnchoredPosition: {x: 252.24023, y: -646}
   m_SizeDelta: {x: -1718.6217, y: -1723.1141}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &299533206
@@ -920,7 +920,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 252.24, y: 222.78998}
+  m_AnchoredPosition: {x: 252.24023, y: 222.79004}
   m_SizeDelta: {x: -1718.6217, y: -1723.1141}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &469978274
@@ -1211,7 +1211,7 @@ GameObject:
   - component: {fileID: 725952175}
   - component: {fileID: 725952174}
   m_Layer: 5
-  m_Name: Player1LPPS
+  m_Name: Player1PPS
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2690,21 +2690,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d52398df1c08c0348bc1671e9d4993c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1Score: {fileID: 1852264833}
-  player2Score: {fileID: 2086032948}
-  player1LinesCleared: {fileID: 1763333468}
-  player2LinesCleared: {fileID: 299533206}
-  player1PPS: {fileID: 725952174}
-  player2PPS: {fileID: 198398192}
-  ui: {fileID: 2055868511}
-  ready: {fileID: 1764764130}
-  go: {fileID: 1319692265}
-  playerWins: {fileID: 445639641}
-  playAgane: {fileID: 2035623729}
-  quit: {fileID: 1778843095}
-  player1Name: PLAYER ONE
-  player2Name: PLAYER TWO
-  loadData: {fileID: 11400000, guid: 036c5d34d8fabb446b22bb8cf1839125, type: 2}
+  _player1Score: {fileID: 1852264833}
+  _player2Score: {fileID: 2086032948}
+  _player1LinesCleared: {fileID: 1763333468}
+  _player2LinesCleared: {fileID: 299533206}
+  _player1PPS: {fileID: 725952174}
+  _player2PPS: {fileID: 198398192}
+  _ready: {fileID: 1764764130}
+  _go: {fileID: 1319692265}
+  _playerWins: {fileID: 445639641}
+  _playAgane: {fileID: 2035623731}
+  _quit: {fileID: 1778843097}
+  _player1Name: PLAYER ONE
+  _player2Name: PLAYER TWO
+  _loadData: {fileID: 11400000, guid: 036c5d34d8fabb446b22bb8cf1839125, type: 2}
   piecesPlaced1: 0
   piecesPlaced2: 0
 --- !u!4 &1907288283
@@ -3165,7 +3164,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 252.24, y: 168}
+  m_AnchoredPosition: {x: 252.24023, y: 168}
   m_SizeDelta: {x: -1718.6217, y: -1723.1141}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2086032948
