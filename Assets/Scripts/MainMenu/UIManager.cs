@@ -10,8 +10,7 @@ namespace UIScene
         private static UIManager _instance;
         public static UIManager Instance { get { return _instance; } }
 
-        [SerializeField]
-        private Transform ui;
+
 
         private void Awake()
         {
