@@ -7,10 +7,8 @@ namespace GameScene
 {
     public class Tetromino : MonoBehaviour
     {
-        [SerializeField]
-        private GameObject ghostParent;
-        [SerializeField]
-        private GameObject ghostChildren;
+        [SerializeField] private GameObject ghostParent;
+        [SerializeField] private GameObject ghostChildren;
 
         private GameObject ghostingTetromino;
 

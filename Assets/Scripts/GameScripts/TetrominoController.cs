@@ -6,24 +6,15 @@ namespace GameScene
 
     public class TetrominoController : MonoBehaviour
     {
-        [SerializeField]
-        private string leftInput;
-        [SerializeField]
-        private string rightInput;
-        [SerializeField]
-        private string downInput;
-        [SerializeField]
-        private string dropInput;
-        [SerializeField]
-        private string holdInput;
-        [SerializeField]
-        private string rotateLeftInput;
-        [SerializeField]
-        private string rotateRightInput;
-        [SerializeField]
-        private TetrisQueue tetrominoQueue;
-        [SerializeField]
-        public TetrisGrid grid;
+        [SerializeField] private string leftInput;
+        [SerializeField] private string rightInput;
+        [SerializeField] private string downInput;
+        [SerializeField] private string dropInput;
+        [SerializeField] private string holdInput;
+        [SerializeField] private string rotateLeftInput;
+        [SerializeField] private string rotateRightInput;
+        [SerializeField] private TetrisQueue tetrominoQueue;
+        [SerializeField] public TetrisGrid grid;
         public int id;
 
         public static event GameEnd GameEnd;
@@ -204,6 +195,7 @@ namespace GameScene
 
         }
 
+        #region MovementLogic
         private void MoveRight()
         {
             if (tetrominoTransform.localPosition.x >= grid.width - tetrominoStats.right)
@@ -368,6 +360,7 @@ namespace GameScene
 
             }
         }
+        #endregion
 
         public void SpawnNew()
         {

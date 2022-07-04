@@ -7,26 +7,17 @@ namespace GameScene
 {
     public class GameManager : MonoBehaviour
     {
-        private static GameManager _instance;
-
-        [SerializeField]
-        private GameObject[] Tetrominos;
-        [SerializeField]
-        private Transform spawner1;
-        [SerializeField]
-        private Transform spawner2;
-        [SerializeField]
-        private TetrominoController tetrominoController1;
-        [SerializeField]
-        private TetrominoController tetrominoController2;
-        [SerializeField]
-        private TetrisQueue queue1;
-        [SerializeField]
-        private TetrisQueue queue2;
-
+        [SerializeField] private GameObject[] Tetrominos;
+        [SerializeField] private Transform spawner1;
+        [SerializeField] private Transform spawner2;
+        [SerializeField] private TetrominoController tetrominoController1;
+        [SerializeField] private TetrominoController tetrominoController2;
+        [SerializeField] private TetrisQueue queue1;
+        [SerializeField] private TetrisQueue queue2;
         private IEnumerator dropCoroutine;
 
         public static GameManager Instance { get { return _instance; } }
+        private static GameManager _instance;
 
         private void Awake()
         {

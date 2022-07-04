@@ -6,19 +6,14 @@ namespace GameScene
 {
     public class TetrisQueue : MonoBehaviour
     {
-        private List<GameObject> queuePieces;
-        [SerializeField]
-        private Transform holdPosition;
+        [SerializeField] private Transform holdPosition;        
+        [SerializeField] private GameObject[] tetrominoPrefabs;
+        [SerializeField] private Transform spawner;
+        [SerializeField] private TetrominoController controller;
+        [SerializeField] private int queueLenght;
         private GameObject currentlyHeld;
-        [SerializeField]
-        private GameObject[] tetrominoPrefabs;
-        [SerializeField]
-        private Transform spawner;
-        [SerializeField]
-        private TetrominoController controller;
+        private List<GameObject> queuePieces;
         private bool holdFull;
-        [SerializeField]
-        private int queueLenght;
 
         public void FillQueue()
         {

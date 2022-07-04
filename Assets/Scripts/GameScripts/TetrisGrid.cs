@@ -6,11 +6,8 @@ namespace GameScene
 {
     public class TetrisGrid : MonoBehaviour
     {
-        [SerializeField]
-        private GameObject garbageTile;
-        [SerializeField]
-        private Transform spawner;
-
+        [SerializeField] private GameObject garbageTile;
+        [SerializeField] private Transform spawner;
         private Transform[,] matrix;
 
         public int height = 20;
